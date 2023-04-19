@@ -41,6 +41,8 @@ Instalamos los siguientes plugins:
 
 Configuración de Jenkins standard, con la URL 'http://localhost:8080/' 
 
+Tenemos que añadir los valores en modo "Secret Text" de las variables de AWS AWS_ACCESS_KEY_ID y AWS_SECRET_ACCESS_KEY.
+
 ### Nodos/Agentes
 
 Para este proyecto utilizaremos dos nodos/agentes externos. Para desplegarlos, entraremos en la carpeta Jenkins y, dentro de ésta, a cada una de las subcarpetas, ejecutando respectivamente:
@@ -82,11 +84,11 @@ En la rama `dev` omitimos el paso de `Manual approval` para que el despliegue se
 
 ## Testing cada 30 minutos
 
-En este proyecto se requiere que se ejecuten los test en la rama main cada 30 minutos. Para ello he utilizado un Job DSL, para lo cual se debe instalar el plugin `Job DSL` que está incluido en la lista de plugins de arriba.
+Necesitamos que se ejecuten los test en la rama main cada 30 minutos, para ello utilizaremos un Job DSL.
 
-Para crear un Job DSL tenemos que ir al Dashboard de Jenkins, crear nuevo item. Le ponemos un nombre, y seleccionamos `Freestyle project`.
+Desde el Dashboard de Jenkins, crear nuevo item `Freestyle project`.
 
-Seleccionamos Git en `Source Code Management` y añadimos la URL del repositorio. Tambien especificar la rama del repositorio, hay que poner 'main' y no 'master' como rama, ya que en este proyecto la rama es 'main'.
+Seleccionamos en apartado Git en `Source Code Management` y añadimos la URL del repositorio. Tambien especificar la rama del repositorio, hay que poner 'main' como rama.
 
 En `Build step` seleccionamos `Process Job DSLs`, y activamos la opción `Use the provided DSL script` para introducir nuestro script:
 ```
@@ -111,3 +113,24 @@ Tambien hay que tener en cuenta que detecta los cambios en scm y la tarea se eje
 Una vez creado en Job DSL será necesario aprovar el scrip. Para ello, en `Manage Jenkins` entraremos en `In-process Script Approval` y clicaremos en `Approve` sobre nuestro script.
 
 Ahora podremos ejecutar el cronjob creado y esto creará otro elemento en el dashboard que será la tarea que se ejecutará cada 30 minutos, y podremos consultar sus logs.
+
+El resultado de dicho test es el siguinte:
+
+```
+First time build. Skipping changelog.
+[Test-App] $ /bin/sh -xe /tmp/jenkins12543986186664983474.sh
++ curl terraform-20230419064922196900000001.s3-website-eu-west-1.amazonaws.com
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100    88  100    88    0     0    303      0 --:--:-- --:--:-- --:--:--   303
+<!doctype html>
+<html>
+<body>
+<h1>Practica Keepcoding Oscar Montes</h1>
+</body>
+</html>
+Finished: SUCCESS
+```
+
