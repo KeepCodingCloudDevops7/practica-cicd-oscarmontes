@@ -29,7 +29,7 @@ pipeline {
                 ok "Deploying..."
             }
             when  {
-                branch 'dev'
+                branch 'main'
             }
             steps {
                 dir('terraform') {
