@@ -1,0 +1,11 @@
+FROM jenkins/ssh-agent:jdk11
+
+# This is ARG because is used only during the build
+# Difference with ENV? ENV is available to the container when it is running
+ARG DEBIAN_FRONTEND=noninteractive
+
+RUN apt update && apt-get install -qy curl
+
+EXPOSE 22
+
+CMD ["/usr/sbin/sshd", "-D"]

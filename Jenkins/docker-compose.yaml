@@ -1,0 +1,37 @@
+   version: "3.9"
+   services:
+    agent-terraform:
+       image: test-jenkins
+       privileged: true
+       container_name: agent-test 
+       ports:
+        - "3333:22"
+       environment:
+        - JENKINS_AGENT_SSH_PUBKEY=$JENKINS_AGENT_SSH_PUBKEY
+       secrets:
+        - host_ssh_key
+       networks:
+        mynetwork:
+          ipv4_address: 192.168.1.172
+    agent-aws:
+       image: aws-jenkins
+       privileged: true
+       container_name: agent-aws
+       ports:
+         - "2222:22"
+       environment:
+        - JENKINS_AGENT_SSH_PUBKEY=$JENKINS_AGENT_SSH_PUBKEY
+       secrets:
+        - host_ssh_key
+       networks:
+        mynetwork:
+          ipv4_address: 192.168.1.173
+   secrets:
+      host_ssh_key:
+        file: /var/lib/jenkins/.ssh/id_agente_rsa
+   networks:
+     mynetwork:
+        driver: bridge
+        ipam:
+           config:
+              - subnet: 192.168.1.172/28
