@@ -70,15 +70,15 @@ El proyecto consta de un pipeline de 'entrega continua' (continuous delivery), p
 El pipeline de este proyecto es un ejemplo de 'Continuous Delivery' y consta de los siguientes pasos:
 
 - Init (terraform init): Inicializa el directorio de trabajo que contiene los ficheros de configuración
-- Plan (terraform init): Crea un plan de ejecución, el cual permite previsualizar los cambios en la infraestructura que implica en despliegue. 
-- Apply (terraform init): Despliega la infraestructura con "Manual approval" La persona autorizada será la que podrá desplegar a producción o en su caso cancelar el despliegue de manera manual (Continuous Delivery). 
-- Test: Comprueba si la página Web desplegada responde (esta acción se realiza en el nodo "test".
+- Plan (terraform init): Crea un plan de ejecución, el cual permite previsualizar los cambios en la infraestructura que implica el despliegue. 
+- Apply (terraform init): Despliega la infraestructura con "Manual approval", la cual tendrá que ser autorizada o, en su defecto, cancelada  (Continuous Delivery). 
+- Test: Comprueba si la página Web desplegada responde (esta acción se realiza en el nodo "test").
 
 Para que revise cada cada 5m si ha habido cambios en el repositorio, iremos a la configuración del pipeline y en `Scan Repository Triggers` activamos `Periodically if not otherwise run`, seleccionando el intervalo que hemos indicado.
 
 #### Rama dev (Continuous Deploy)
 
-También he creado una segunda rama llamada `dev` en el que se omite el paso de `Manual approval` para que el despliegue sea completamente automático.
+En la rama `dev` omitimos el paso de `Manual approval` para que el despliegue sea completamente automático.
 
 ## Testing cada 30 minutos
 
@@ -92,13 +92,15 @@ En `Build step` seleccionamos `Process Job DSLs`, y activamos la opción `Use th
 ```
 job('Test-App') {
   scm {
-    github('KeepCodingCloudDevops7/practica-cicd-AimarLauzirika', 'main')
+    github('KeepCodingCloudDevops7/practica-cicd-oscarmontes', 'main')
   }
   triggers {
     scm('*/30 * * * *')
   }
   steps {
-    maven('-e test')
+    shell('''
+    curl terraform-20230419064922196900000001.s3-website-eu-west-1.amazonaws.com
+    ''')
   }
 }
 ```
