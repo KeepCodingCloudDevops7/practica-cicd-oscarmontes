@@ -24,13 +24,6 @@ pipeline {
             }
         }
         stage('Apply') {
-            input {
-                message "Confirm deployment"
-                ok "Deploying..."
-            }
-            when  {
-                branch 'dev'
-            }
             steps {
                 dir('terraform') {
                      sh '''cd www
